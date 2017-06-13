@@ -59,17 +59,27 @@ parser = html5lib.HTMLParser(tree=html5lib.treebuilders.getTreeBuilder("lxml"), 
 
 def tidy(src, fragment=False, container="div", encoding=None, parseMeta=True, useChardet=True, method="xml", pretty_print=False, xml_declaration=None, output_encoding="utf-8"):
     if fragment:
-        parts = parser.parseFragment(src, container=container, encoding=encoding, parseMeta=parseMeta, useChardet=useChardet)
-    else:
-        parts = [parser.parse(src, encoding=encoding, parseMeta=parseMeta, useChardet=useChardet)]
+        parts = parser.parseFragment(src, container=container)
+    else: #, encoding=encoding, parseMeta=parseMeta, useChardet=useChardet
+        parts = [parser.parse(src)]
 
     ret = ""
     for p in parts:
         t = type(p)
-        if (t == str or t == unicode):
-            ret += p
-        else:
-            ret += lxml.etree.tostring(p, method=method, pretty_print=pretty_print, xml_declaration=xml_declaration, encoding=output_encoding)
+        try:
+            if (t == str or t == unicode):
+                ret += p
+            else:
+                ret += lxml.etree.tostring(p, method=method, pretty_print=pretty_print, xml_declaration=xml_declaration, encoding=output_encoding).decode('utf-8')
+        except Exception:
+            if (t == str):
+                ret += p
+            else:
+                ret += lxml.etree.tostring(p, method=method, pretty_print=pretty_print, xml_declaration=xml_declaration, encoding=output_encoding).decode('utf-8')
+        finally:
+            pass
+
+        
 
     return ret
 

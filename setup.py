@@ -6,7 +6,7 @@ from setuptools import setup
 
 setup(
     name='html5tidy',
-    version='1.0',
+    version='1.0.py3',
     author='Michael Murtaugh',
     author_email='mm@automatist.org',
     description='Simple wrapper around html5lib & lxml.etree to "tidy" html in the wild to well-formed xml/html',

@@ -47,9 +47,21 @@ This software is released under the GPL3 license. See gpl-3.0.txt for details.
 
 if __name__ == "__main__":
     import argparse
-    import urllib2
+    
+    try:
+        # For Python 3.0 and later
+        from urllib.request import urlopen
+    except ImportError:
+        # Fall back to Python 2's urllib2
+        from urllib2 import urlopen
+
     import sys
-    import urlparse
+
+    try:
+        from urllib.parse import urlparse
+    except ImportError:
+        from urlparse import urlparse
+
     from html5tidy import tidy
 
     argparser = argparse.ArgumentParser(description='Tidy HTML input using html5lib (input) + lxml (output)')
@@ -75,8 +87,8 @@ if __name__ == "__main__":
         xml_declaration = True
 
     if args.source:
-        if urlparse.urlparse(args.source).scheme:
-            f = urllib2.urlopen(args.source)
+        if urlparse(args.source).scheme:
+            f = urlopen(args.source)
 
         else:
             f = open(args.source)
